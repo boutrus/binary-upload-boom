@@ -1,15 +1,42 @@
 <%- include('partials/header') -%>
-  <div class="container">
-    <div class="row justify-content-center mt-5">
-      <ul class="row list-unstyled">
+<style>
+  .outer-border {
+    border: 10px solid #e6e6e6;
+    border-radius: 25px;
+    padding: 70px;
+  }
+  .inner-border {
+    border: 3px solid #e6e6e6;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .post-text {
+    text-align: center;
+    max-width: 500px;
+  }
+</style>
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="outer-border">
+      <ul class="list-unstyled">
         <% for(var i=0; i<posts.length; i++) {%>
-          <li class="col-6 justify-content-between mt-5">
-            <a href="/post/<%= posts[i]._id%>">
-              <img class="img-fluid" src="<%= posts[i].image%>">
-            </a>
+          <li class="my-4">
+            <div class="inner-border">
+              <a href="/post/<%= posts[i]._id%>" style="display: inline-block; text-align: center;">
+                <img class="img-fluid" src="<%= posts[i].image %>" style="border-radius: 20px; width: 500px; height: 700px;">
+              </a>
+              <p class="post-text" style="margin-top: 10px;">
+                <strong><%= user.userName %></strong> : <%= posts[i].title %>; <em><%= posts[i].caption %></em>
+              </p>
+            </div>
           </li>
         <% } %>
-        </ul>
+      </ul>
     </div>
-  </div>  
+  </div>
+</div>
 <%- include('partials/footer') -%>

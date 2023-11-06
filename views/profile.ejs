@@ -1,46 +1,76 @@
 <%- include('partials/header') -%>
+<style>
+  .user-info {
+    padding: 20px;
+    background-color: #f5f5f5; /* Light gray background */
+    border-radius: 15px;
+  }
+  .add-post-section {
+    margin-top: 20px; /* Add spacing between user info and add post section */
+    padding: 20px;
+    background-color: #ffffff; /* White background */
+    border: 1px solid #e6e6e6; /* Light border */
+    border-radius: 15px;
+  }
+  .posts-container {
+    margin-top: 20px; /* Add spacing between add post section and posts */
+  }
+  .post-card {
+    margin-bottom: 20px; /* Add spacing between individual posts */
+    padding: 20px;
+    background-color: #ffffff; /* White background */
+    border: 1px solid #e6e6e6; /* Light border */
+    border-radius: 15px;
+  }
+</style>
 <div class="container">
   <div class="row mt-5">
-      <div class="col-6">
-          <div>
-              <p><strong>User Name</strong>: <%= user.userName %></p>
-              <p><strong>Email</strong>: <%= user.email %></p>
-              <a href="/logout" class="col-3 btn btn-primary">Logout</a>
-          </div>
-          <div class="mt-5">
-            <h2>Add a post</h2>
-            <form action="/post/createPost" enctype="multipart/form-data" method="POST">
-              <div class="mb-3">
-                  <label for="title" class="form-label">Title</label>
-                  <input type="text" class="form-control" id="title" name="title">
-              </div>
-              <div class="mb-3">
-                <label for="caption" class="form-label">Caption</label>
-                <textarea class="form-control" id="caption" name="caption"></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="imgUpload" class="form-label">Image</label>
-                <input type="file" class="form-control" id="imageUpload" name="file">
-              </div>
-              <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
-            </form>
-          </div>
+    <div class="col-4 user-info">
+      <div>
+        <p><strong>User Name</strong>: <%= user.userName %></p>
+        <p><strong>Email</strong>: <%= user.email %></p>
+        <a href="/logout" class="col-3 btn btn-primary">Logout</a>
       </div>
-      <div class="col-6">
-        <ul class="row list-unstyled">
-        <% for(var i=0; i<posts.length; i++) {%>
-          <li class="col-6 justify-content-between mt-5">
-            <a href="/post/<%= posts[i]._id%>">
-              <img class="img-fluid" src="<%= posts[i].image%>">
-            </a>
-          </li>
-        <% } %>
-        </ul>
-        <div class="row justify-content-center mt-5">
-          <a class="btn btn-primary" href="/feed">Return to Feed</a>
-        </div>  
-      </div>  
     </div>
+    <div class="col-8 add-post-section">
+      <h2>Add a post</h2>
+      <form action="/post/createPost" enctype="multipart/form-data" method="POST">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" class="form-control" id="title" name="title">
+        </div>
+        <div class="mb-3">
+          <label for="caption" class="form-label">Caption</label>
+          <textarea class="form-control" id="caption" name="caption"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="imgUpload" class="form-label">Image</label>
+          <input type="file" class="form-control" id="imageUpload" name="file">
+        </div>
+        <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
+      </form>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-5 posts-container">
+    <ul class="list-unstyled">
+      <% for(var i=0; i<posts.length; i++) {%>
+        <li class="col-12">
+          <div class="post-card">
+            <div style="text-align: center;">
+              <a href="/post/<%= posts[i]._id%>" style="display: inline-block;">
+                <img class="img-fluid" src="<%= posts[i].image %>" style="border-radius: 20px; width: 500px; height: 700px;">
+              </a>
+            </div>
+            <p style="margin-top: 10px; text-align: center;">
+              <strong><%= user.userName %></strong> : <%= posts[i].title %>; <em><%= posts[i].caption %></em>
+            </p>
+          </div>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+  <div class="row justify-content-center mt-5">
+    <a class="btn btn-primary" href="/feed">Return to Feed</a>
   </div>
 </div>
 <%- include('partials/footer') -%>

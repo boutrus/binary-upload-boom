@@ -1,5 +1,6 @@
 const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
+const User = require("../models/User");
 
 module.exports = {
   getProfile: async (req, res) => {
@@ -12,10 +13,18 @@ module.exports = {
   },
   getFeed: async (req, res) => {
     try {
+      // Get the user ID of the currently authenticated user (you'll need to adapt this based on your authentication method)
+      const userId = req.user.id;
+  
+      // Fetch the user data using the user ID (example using a User model)
+      const user = await User.findById(userId).lean();
+  
+      // Fetch the posts data or retrieve it from your database
       const posts = await Post.find().sort({ createdAt: "desc" }).lean();
-      res.render("feed.ejs", { posts: posts });
+  
+      res.render("feed.ejs", { user, posts });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   },
   getPost: async (req, res) => {
