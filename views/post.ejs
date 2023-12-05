@@ -1,36 +1,101 @@
 <%- include('partials/header') -%>
+<style>
+  body {
+    background-color: #333; /* Dark grey background */
+    color: #fff; /* White text */
+  }
+
+  .btn-primary {
+    background-color: #f8f8f8; /* Off-white button background */
+    color: #000; /* Black text for buttons */
+    outline: black; /* Remove button outline on focus */
+    border-color: #000;
+    transition:  0.5s ease-out; /* Add a smooth transition for background color */
+  }
+  
+
+  .btn-primary:hover {
+    background-color: papayawhip; /* Lighter background on hover */
+    color: #000;
+    border-color: grey;
+    transform: scale(1.1);
+  }
+
+  .fa {
+    color: black; /* Black color for Font Awesome symbols */
+  }
+
+  .add-comment-section {
+    background-color: #555; /* Darker background for the comment section */
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .post-text {
+    color: #fff; /* White text for comments */
+  }
+
+  .inner-border {
+    border: 1px solid #666; /* Darker border for comment boxes */
+    border-radius: 8px;
+    padding: 10px;
+  }
+</style>
 <div class="container">
   <div class="row justify-content-center mt-5">
     <div class="col-6">
-      <h2><%= post.title %></h2>
-      <img class="img-fluid" src="<%= post.image%>" />
-      <div class="row justify-content-between">
-        <form
-          class="col-1"
-          action="/post/likePost/<%= post.id %>?_method=PUT"
-          method="POST"
-        >
+      <img class="img-fluid" src="<%= post.image %>" />
+      <div class="row mt-3 justify-content-between">
+        <form class="col-1" action="/post/likePost/<%= post.id %>?_method=PUT" method="POST">
           <button class="btn btn-primary fa fa-heart" type="submit"></button>
         </form>
-        <h3 class="col-3">Likes: <%= post.likes %></h3>
-        <%if(post.user == user.id){ %>
-        <form
-          action="/post/deletePost/<%= post.id %>?_method=DELETE"
-          method="POST"
-          class="col-3"
-        >
+        <h3 class="col-3 text-center">Likes: <%= post.likes %></h3>
+        <form action="/post/deletePost/<%= post.id %>?_method=DELETE" method="POST" class="col-3">
           <button class="btn btn-primary fa fa-trash" type="submit"></button>
         </form>
-        <%}%>
+      </div>
+      <h2><%= post.title %></h2>
+      <div class="row justify-content-between mt-2">
+        <div class="col-6">
+          <p><strong><%= user.userName.charAt(0).toUpperCase() + user.userName.slice(1) %>:</strong> <%= post.caption.charAt(0).toUpperCase() + post.caption.slice(1) %></p>
+        </div>
+        <!-- Add the condition for the user.id check -->
+        <% if (post.user == user.id) { %>
+          <div class="col-6">
+          </div>
+        <% } %>
       </div>
     </div>
-    <div class="col-3 mt-5">
-      <p><%= post.caption %></p>
+    
+
+    <ul>
+      <% for(var i=0; i<comments.length; i++) {%>
+        <li class="my-4">
+          <div class="inner-border">
+            <p class="post-text" style="margin-top: 10px;">
+              <%= comments[i].comment.charAt(0).toUpperCase() + comments[i].comment.slice(1) %>
+            </p>
+          </div>
+        </li>
+      <% } %>
+    </ul>
+
+    <div class="col-8 add-comment-section">
+      <h2>Add a comment</h2>
+      <form action="/comment/createComment/<%= post._id%>"  method="POST">
+        <div class="mb-3">
+          <label for="title" class="form-label">Comment</label>
+          <input type="text" class="form-control" id="comment" name="comment">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
     </div>
-    <div class="col-6 mt-5">
-      <a class="btn btn-primary" href="/profile">Return to Profile</a>
-      <a class="btn btn-primary" href="/feed">Return to Feed</a>
-    </div>
+    
+    <div class="row justify-content-around">
+    <a class="btn btn-primary col-auto" href="/profile">Return to Profile</a>
+    <!-- Added my-3 for vertical margin (top and bottom) -->
+    <a class="btn btn-primary col-auto" href="/feed">Return to Feed</a>
+    <!-- Added my-3 for vertical margin (top and bottom) -->
   </div>
 </div>
 

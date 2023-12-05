@@ -1,5 +1,5 @@
 const Comment = require("../models/Comment");
-const User = require("../models/User");
+
 
 module.exports = {
   createComment: async (req, res) => {
@@ -11,7 +11,7 @@ module.exports = {
         post: req.params.id,
       });
       console.log("Comment has been added!");
-      res.redirect("/profile");
+      res.redirect("/post/"+req.params.id);
     } catch (err) {
       console.log(err);
     }
@@ -19,13 +19,13 @@ module.exports = {
   likeComment: async (req, res) => {
     try {
       await Comment.findOneAndUpdate(
-        { _id: req.params.id },
+        { post: req.params.id },
         {
           $inc: { likes: 1 },
         }
       );
       console.log("Likes +1");
-      res.redirect(`/post/${req.params.id}`);
+      res.redirect("/post/"+req.params.id);
     } catch (err) {
       console.log(err);
     }
@@ -33,14 +33,14 @@ module.exports = {
   deleteComment: async (req, res) => {
     try {
       // Find post by id
-      let post = await Comment.findById({ _id: req.params.id });
+      let comment = await Comment.findById({ _id: req.params.id });
       await cloudinary.uploader.destroy(post.cloudinaryId);
       // Delete post from db
-      await Comment.remove({ _id: req.params.id });
+      await Comment.remove({ post: req.params.id });
       console.log("Deleted Comment");
-      res.redirect("/profile");
+      res.redirect("/post/"+req.params.id);
     } catch (err) {
-      res.redirect("/profile");
+      res.redirect("/post/"+req.params.id);
     }
   },
 };

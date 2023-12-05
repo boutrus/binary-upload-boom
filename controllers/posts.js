@@ -1,12 +1,14 @@
 const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
+const Comment = require("../models/Comment");
 const User = require("../models/User");
 
 module.exports = {
   getProfile: async (req, res) => {
     try {
       const posts = await Post.find({ user: req.user.id });
-      res.render("profile.ejs", { posts: posts, user: req.user });
+      const comments = await Comment.find({ post: req.params.id });
+      res.render("profile.ejs", { posts: posts, user: req.user, comments: comments });
     } catch (err) {
       console.log(err);
     }
@@ -21,8 +23,9 @@ module.exports = {
   
       // Fetch the posts data or retrieve it from your database
       const posts = await Post.find().sort({ createdAt: "desc" }).lean();
+      const comments = await Comment.find({post:req.params.id}).sort({ createdAt: "desc" }).lean();
   
-      res.render("feed.ejs", { user, posts });
+      res.render("feed.ejs", { user, posts, comments });
     } catch (err) {
       console.error(err);
     }
@@ -30,7 +33,8 @@ module.exports = {
   getPost: async (req, res) => {
     try {
       const post = await Post.findById(req.params.id);
-      res.render("post.ejs", { post: post, user: req.user });
+      const comments = await Comment.find({post:req.params.id}).sort({ createdAt: "desc" }).lean();
+      res.render("post.ejs", { post: post, user: req.user, comments: comments });
     } catch (err) {
       console.log(err);
     }
